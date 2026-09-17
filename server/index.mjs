@@ -35,10 +35,39 @@ app.disable("x-powered-by");
 app.use(express.json({ limit: "64kb" }));
 
 const isDev = process.env.NODE_ENV !== "production";
+// Cross-origin mode (frontend hosted separately, e.g. GitHub Pages talking to
+// a hosted backend). Requires SameSite=None cookies and CORS headers.
+const isCrossOrigin = Boolean(process.env.CORS_ORIGIN);
 const useSecureCookies =
-  process.env.COOKIE_SECURE === "true" || process.env.NODE_ENV === "production";
+  process.env.COOKIE_SECURE === "true" || process.env.NODE_ENV === "production" || isCrossOrigin;
 const SESSION_COOKIE = "rh_session";
 const SESSION_MAX_AGE = 7 * 24 * 60 * 60;
+
+// Allow the static frontend origin(s) to call this API with credentials.
+// CORS_ORIGIN is a comma-separated list of origins (no trailing slashes), e.g.
+// "https://manikantaux566.github.io". Unset means same-origin only (local dev).
+const ALLOWED_ORIGINS = (process.env.CORS_ORIGIN || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+if (ALLOWED_ORIGINS.length > 0) {
+  app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    if (origin && ALLOWED_ORIGINS.includes(origin)) {
+      res.setHeader("Access-Control-Allow-Origin", origin);
+      res.setHeader("Access-Control-Allow-Credentials", "true");
+      res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, OPTIONS");
+      res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+      res.setHeader("Vary", "Origin");
+      if (req.method === "OPTIONS") {
+        res.setHeader("Access-Control-Max-Age", "600");
+        return res.status(204).end();
+      }
+    }
+    return next();
+  });
+}
 
 function parseCookies(req) {
   const header = req.headers.cookie;
@@ -54,17 +83,27 @@ function parseCookies(req) {
   return out;
 }
 
+function sessionCookieAttributes({ maxAge = SESSION_MAX_AGE } = {}) {
+  const attributes = [
+    "HttpOnly",
+    `SameSite=${isCrossOrigin ? "None" : "Lax"}`,
+    "Path=/",
+    `Max-Age=${maxAge}`,
+  ];
+  // SameSite=None is rejected by browsers unless the cookie is Secure.
+  if (useSecureCookies) attributes.push("Secure");
+  return attributes.join("; ");
+}
+
 function setSessionCookie(res, token) {
   res.setHeader(
     "Set-Cookie",
-    `${SESSION_COOKIE}=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${SESSION_MAX_AGE}${
-      useSecureCookies ? "; Secure" : ""
-    }`,
+    `${SESSION_COOKIE}=${token}; ${sessionCookieAttributes()}`,
   );
 }
 
 function clearSessionCookie(res) {
-  res.setHeader("Set-Cookie", `${SESSION_COOKIE}=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0`);
+  res.setHeader("Set-Cookie", `${SESSION_COOKIE}=; ${sessionCookieAttributes({ maxAge: 0 })}`);
 }
 
 function currentUser(req) {
@@ -227,6 +266,11 @@ auth.post(
 );
 
 app.use("/api/auth", auth);
+
+// Liveness probe for hosted platforms (Render health checks expect a 2xx).
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ ok: true });
+});
 
 app.use("/api", (req, res) => {
   error(res, 404, "not-found", "Not found.");

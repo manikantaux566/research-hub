@@ -1,0 +1,49 @@
+# Render Blueprint for the Research Hub auth backend.
+#
+# Deploy: in the Render dashboard choose "New > Blueprint" and select this
+# repository. It provisions the web service below with the env vars listed.
+#
+# After creation, change the service URL from `https://research-hub-auth.onrender.com`
+# (or similar) to your actual service URL and:
+#   1. Set CORS_ORIGIN to your GitHub Pages origin (e.g. https://manikantaux566.github.io)
+#      if it isn't set correctly here.
+#   2. Add a repository variable AUTH_API_URL = https://<service>.onrender.com in
+#      GitHub repo Settings > Secrets and variables > Actions, then re-run the
+#      Deploy to GitHub Pages workflow.
+.services:
+  - type: web
+    name: research-hub-auth
+    runtime: node
+    plan: free
+    buildCommand: npm ci
+    startCommand: node --env-file-if-exists=.env server/index.mjs
+    healthCheckPath: /api/health
+    # Optional: persist accounts across deploys/restarts (paid plans only).
+    # disk:
+    #   name: server-data
+    #   mountPath: /data
+    #   sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CORS_ORIGIN
+        value: https://manikantaux566.github.io
+      # On the free plan the filesystem is ephemeral (accounts are wiped on
+      # restart). With a persistent disk mounted at /data, add
+      # DATA_DIR=/data so accounts survive redeploys.
+      - key: APP_BASE_URL
+        value: https://manikantaux566.github.io/research-hub
+      # SMTP delivery for password-reset emails. Values are set in the dashboard
+      # (marked "sync: false"). Leave SMTP_HOST empty to keep the log fallback.
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_SECURE
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: MAIL_FROM
+        sync: false

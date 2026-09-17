@@ -10,6 +10,7 @@ export function UserMenu() {
   const navigate = useNavigate();
 
   const user = status.status === "authenticated" ? status.user : null;
+  const demo = status.status === "authenticated" && status.demo;
 
   useEffect(() => {
     if (!open) return;
@@ -63,7 +64,7 @@ export function UserMenu() {
               <p className="truncate text-[13px] font-medium text-foreground">
                 {user.displayName || "User"}
               </p>
-              <p className="truncate text-xs text-muted">{user.email}</p>
+              <p className="truncate text-xs text-muted">{demo ? "Demo session" : user.email}</p>
             </div>
           </div>
           <div className="p-1.5">
@@ -76,15 +77,22 @@ export function UserMenu() {
               <Icon name="settings" className="h-4 w-4 text-faint" />
               Account &amp; settings
             </Link>
-            <button
-              type="button"
-              role="menuitem"
-              onClick={handleSignOut}
-              className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[13px] text-danger transition-colors hover:bg-danger/10"
-            >
-              <Icon name="logout" className="h-4 w-4" />
-              Sign out
-            </button>
+            {demo ? (
+              <p className="flex items-start gap-2.5 rounded-lg px-2.5 py-2 text-xs leading-relaxed text-muted">
+                <Icon name="info" className="mt-0.5 h-4 w-4 shrink-0 text-faint" />
+                No account — research is saved only in this browser.
+              </p>
+            ) : (
+              <button
+                type="button"
+                role="menuitem"
+                onClick={handleSignOut}
+                className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[13px] text-danger transition-colors hover:bg-danger/10"
+              >
+                <Icon name="logout" className="h-4 w-4" />
+                Sign out
+              </button>
+            )}
           </div>
         </div>
       )}

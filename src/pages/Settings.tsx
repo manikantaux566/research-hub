@@ -86,6 +86,7 @@ function AccountSection() {
   const { status, signOut, changePassword, updateDisplayName } = useAuth();
   const navigate = useNavigate();
   const user = status.status === "authenticated" ? status.user : null;
+  const demo = status.status === "authenticated" && status.demo;
 
   const [name, setName] = useState(user?.displayName ?? "");
   const [nameSaving, setNameSaving] = useState(false);
@@ -101,6 +102,26 @@ function AccountSection() {
   const [pwError, setPwError] = useState<string | null>(null);
 
   if (!user) return null;
+
+  if (demo) {
+    return (
+      <Section icon="user" title="Account" subtitle="Demo session — no account or password.">
+        <div className="space-y-3">
+          <p className="rounded-lg border border-border bg-surface-muted px-4 py-3 text-sm leading-relaxed text-muted">
+            You're using a <span className="font-medium text-foreground">demo session</span> because no
+            authentication service is reachable (for example, on a static GitHub Pages site). There's no
+            account or password, and everything you build is stored only in this browser.
+          </p>
+          <p className="rounded-lg border border-border bg-surface-muted px-4 py-3 text-xs leading-relaxed text-muted">
+            To sign in with a real account, run the app locally with the auth server (
+            <code className="font-mono">npm run server</code>) or connect a hosted backend. Your research
+            data is never tied to an account.
+          </p>
+          <p className="text-xs text-muted">Session: {user.email}</p>
+        </div>
+      </Section>
+    );
+  }
 
   async function handleSaveName() {
     setNameSaving(true);

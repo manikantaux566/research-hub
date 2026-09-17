@@ -5,9 +5,12 @@ import { ThemeToggle } from "./ThemeToggle";
 import { UserMenu } from "./UserMenu";
 import { CommandPalette } from "../ui/CommandPalette";
 import { Icon } from "../ui/Icon";
+import { Badge } from "../ui/Badge";
 import { searchAll } from "../../lib/search";
+import { useAuth } from "../../lib/auth/useAuth";
 
 export function Layout() {
+  const { status } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const location = useLocation();
@@ -65,6 +68,9 @@ export function Layout() {
 
           <div className="ml-auto flex items-center gap-2">
             <ThemeToggle />
+            {status.status === "authenticated" && status.demo && (
+              <Badge label="Demo session" tone="gray" title="No account — research is saved only in this browser." />
+            )}
             <UserMenu />
           </div>
         </div>

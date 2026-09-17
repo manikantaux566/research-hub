@@ -24,7 +24,13 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run build
+      - name: Build
+        run: npm run build
+        env:
+          # Backend origin for the production bundle. Set the AUTH_API_URL
+          # repository variable in Settings > Secrets and variables > Actions
+          # (e.g. https://research-hub-auth.onrender.com). Empty → same-origin.
+          VITE_AUTH_BASE_URL: ${{ vars.AUTH_API_URL }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

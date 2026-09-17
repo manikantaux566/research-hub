@@ -5,7 +5,7 @@ import type { AuthUser, SignUpInput } from "./api";
 export type AuthStatus =
   | { status: "loading" }
   | { status: "unauthenticated" }
-  | { status: "authenticated"; user: AuthUser };
+  | { status: "authenticated"; user: AuthUser; demo: boolean };
 
 export type AuthContextValue = {
   status: AuthStatus;

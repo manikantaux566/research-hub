@@ -5,6 +5,16 @@ export type AuthUser = {
   createdAt: string;
 };
 
+// Fictional session used when no auth backend is reachable (e.g. the app is
+// served from a static site with no /api). The app stays fully usable and all
+// research still lives in the visitor's browser.
+export const DEMO_USER: AuthUser = {
+  id: "demo-local-session",
+  email: "demo@research-hub.local",
+  displayName: "Demo",
+  createdAt: "2026-01-01T00:00:00.000Z",
+};
+
 export type ApiError = {
   code: string;
   message: string | null;
@@ -37,10 +47,16 @@ function friendlyMessage(code: string, fallback: string | null): string {
 
 export type AuthResponse = { status: number; data: unknown };
 
+// Where the auth API lives. Set VITE_AUTH_BASE_URL at build time to point the
+// production bundle at a hosted backend (e.g. a Render service). When unset,
+// requests stay same-origin — in dev the Vite proxy forwards /api to the local
+// server, and single-origin deployments need no extra config.
+const AUTH_BASE_URL = ((import.meta.env.VITE_AUTH_BASE_URL as string | undefined) ?? "").replace(/\/+$/, "");
+
 export async function request(path: string, init?: RequestInit): Promise<AuthResponse> {
   let response: Response;
   try {
-    response = await fetch(path, {
+    response = await fetch(`${AUTH_BASE_URL}${path}`, {
       credentials: "include",
       ...init,
       headers: { ...(init?.body ? { "Content-Type": "application/json" } : {}), ...init?.headers },
