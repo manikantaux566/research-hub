@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, Link } from "react-router-dom";
 import { ThemeProvider } from "./lib/theme/ThemeProvider";
 import { AuthProvider } from "./lib/auth/AuthProvider";
 import { RequireAuth, PublicOnly } from "./lib/auth/RequireAuth";
@@ -74,6 +74,12 @@ function NotFound() {
       <div className="text-center">
         <p className="text-4xl font-bold text-faint">404</p>
         <p className="mt-2 text-sm text-muted">That page doesn't exist.</p>
+        <Link
+          to="/"
+          className="mt-4 inline-flex h-8 items-center gap-1.5 rounded-lg border border-border-strong bg-surface px-3 text-xs font-medium text-foreground hover:bg-surface-hover hover:border-strong"
+        >
+          Go to dashboard
+        </Link>
       </div>
     </div>
   );
@@ -82,8 +88,12 @@ function NotFound() {
 function InitRedirect({ to }: { to: string }) {
   // 404.html stores the full request path including the base prefix (e.g.
   // "/research-hub/projects"). The router already applies `basename`, so strip
-  // the prefix to get the app-internal path and avoid a doubled base.
+  // the prefix to get the app-internal path. Loop so a redirect that was itself
+  // built from an already-doubled URL (a tab stuck on the old bug) recovers.
   const base = import.meta.env.BASE_URL; // "/research-hub/" in production, "/" in dev
-  const target = base && to.startsWith(base) ? to.slice(base.length - 1) : to;
+  let target = to;
+  if (base && base !== "/") {
+    while (target.startsWith(base)) target = "/" + target.slice(base.length);
+  }
   return <Navigate to={target} replace />;
 }
