@@ -1,0 +1,517 @@
+@import "tailwindcss";
+
+/* Class-based dark mode so theme preference can switch Light/Dark/System. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  color-scheme: light;
+  --tw-ring-offset-color: var(--background);
+
+  /* ------------------------------------------------------------------ */
+  /* Surfaces & ink (light)                                              */
+  /* ------------------------------------------------------------------ */
+  --background: #f5f6f8;
+  --surface: #ffffff;
+  --surface-elevated: #ffffff;
+  --surface-muted: #f1f3f6;
+  --surface-hover: rgba(15, 23, 42, 0.045);
+  --surface-sunken: #eef0f4;
+
+  --border: #e5e8ed;
+  --border-strong: #d2d7df;
+
+  --foreground: #14171c;
+  --muted: #5b6472;
+  --faint: #8b94a3;
+
+  /* ------------------------------------------------------------------ */
+  /* Brand & semantics (light)                                           */
+  /* ------------------------------------------------------------------ */
+  --link: #4f46e5;
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-fg: #ffffff;
+
+  --accent: #0d9488;
+  --accent-hover: #0f766e;
+  --accent-fg: #ffffff;
+
+  --success: #047857;
+  --success-fg: #ffffff;
+  --warning: #b45309;
+  --warning-fg: #ffffff;
+  --danger: #dc2626;
+  --danger-hover: #b91c1c;
+  --danger-fg: #ffffff;
+  --info: #0369a1;
+  --info-fg: #ffffff;
+
+  --focus: #4f46e5;
+}
+
+.dark {
+  color-scheme: dark;
+  --tw-ring-offset-color: var(--background);
+
+  /* Surfaces & ink (dark) — deeper, calmer than a default slate stack. */
+  --background: #0b0d12;
+  --surface: #12151d;
+  --surface-elevated: #171b24;
+  --surface-muted: #1a1f29;
+  --surface-hover: rgba(148, 163, 184, 0.1);
+  --surface-sunken: #0e1116;
+
+  --border: #252b37;
+  --border-strong: #38404f;
+
+  --foreground: #e7eaf0;
+  --muted: #9aa4b4;
+  --faint: #6a7484;
+
+  --link: #a5b4fc;
+  --primary: #6366f1;
+  --primary-hover: #818cf8;
+  --primary-fg: #ffffff;
+
+  --accent: #2dd4bf;
+  --accent-hover: #5eead4;
+  --accent-fg: #042f2e;
+
+  --success: #34d399;
+  --success-fg: #052e22;
+  --warning: #fbbf24;
+  --warning-fg: #3b2602;
+  --danger: #f87171;
+  --danger-hover: #fca5a5;
+  --danger-fg: #450a0a;
+  --info: #38bdf8;
+  --info-fg: #082f49;
+
+  --focus: #818cf8;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-strong: var(--border-strong);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-link: var(--link);
+  --color-focus: var(--focus);
+
+  --color-primary: var(--primary);
+  --color-primary-fg: var(--primary-fg);
+  --color-primary-hover: var(--primary-hover);
+
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-hover: var(--accent-hover);
+
+  --color-success: var(--success);
+  --color-success-fg: var(--success-fg);
+  --color-warning: var(--warning);
+  --color-warning-fg: var(--warning-fg);
+  --color-danger: var(--danger);
+  --color-danger-fg: var(--danger-fg);
+  --color-danger-hover: var(--danger-hover);
+  --color-info: var(--info);
+  --color-info-fg: var(--info-fg);
+
+  /* Elevation — restrained, layered, premium. */
+  --shadow-xs: 0 1px 2px 0 rgb(15 23 42 / 0.04);
+  --shadow-raised: 0 1px 2px 0 rgb(15 23 42 / 0.04),
+    0 4px 14px -4px rgb(15 23 42 / 0.08);
+  --shadow-overlay: 0 2px 8px -2px rgb(15 23 42 / 0.1),
+    0 24px 48px -12px rgb(15 23 42 / 0.22);
+  --shadow-focus: 0 0 0 1px color-mix(in srgb, var(--focus) 45%, transparent),
+    0 0 0 4px color-mix(in srgb, var(--focus) 16%, transparent);
+
+  /* Motion */
+  --animate-fade-in: fade-in 0.14s ease-out;
+  --animate-zoom-in: zoom-in 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-slide-in: slide-in 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-shimmer: shimmer 1.5s infinite;
+}
+
+@theme {
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-300: #cbd5e1;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #64748b;
+  --color-slate-600: #475569;
+  --color-slate-700: #334155;
+  --color-slate-800: #1e293b;
+  --color-slate-900: #0f172a;
+  --color-slate-950: #020617;
+
+  --color-indigo-50: #eef2ff;
+  --color-indigo-100: #e0e7ff;
+  --color-indigo-500: #6366f1;
+  --color-indigo-600: #4f46e5;
+  --color-indigo-700: #4338ca;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+}
+
+/* ------------------------------------------------------------------ */
+/* Page-level defaults                                                 */
+/* ------------------------------------------------------------------ */
+html,
+body {
+  height: 100%;
+}
+
+html.dark {
+  background-color: var(--background);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "cv11", "ss01";
+  font-variation-settings: "opsz" 32;
+}
+
+/* Headings get tighter, more editorial tracking by default. */
+h1,
+h2,
+h3 {
+  letter-spacing: -0.017em;
+}
+
+/* Native form controls / scrollbars adapt to the active color scheme. */
+.dark select,
+.dark input,
+.dark textarea {
+  color-scheme: dark;
+}
+
+/* Opt-in numeric alignment for metrics, dates, counts. */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------ */
+/* Selection                                                           */
+/* ------------------------------------------------------------------ */
+::selection {
+  background-color: color-mix(in srgb, var(--primary) 22%, transparent);
+}
+.dark ::selection {
+  background-color: color-mix(in srgb, var(--primary) 34%, transparent);
+}
+
+/* ------------------------------------------------------------------ */
+/* Scrollbars                                                          */
+/* ------------------------------------------------------------------ */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: color-mix(in srgb, var(--border-strong) 65%, transparent);
+  border-radius: 9999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--border-strong);
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ------------------------------------------------------------------ */
+/* Focus-visible: elements that use focus:ring-* already apply        */
+/* focus:outline-none, so the global outline never conflicts with     */
+/* those components.  Sidebar links, tabs, tree buttons, raw links    */
+/* and menu items gain this ring for free.                            */
+/* ------------------------------------------------------------------ */
+:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--focus) 60%, transparent);
+  outline-offset: 2px;
+  border-radius: 0.375rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Reduced motion                                                      */
+/* ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Keyframes                                                           */
+/* ------------------------------------------------------------------ */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Writing editor content — readable in both themes without the        */
+/* @tailwindcss/typography plugin.                                     */
+/* ------------------------------------------------------------------ */
+.writing-content {
+  color: var(--foreground);
+  line-height: 1.8;
+  font-size: 1.0625rem;
+  letter-spacing: -0.003em;
+}
+.writing-content:focus-visible {
+  outline: none;
+}
+.writing-content h1,
+.writing-content h2,
+.writing-content h3,
+.writing-content h4 {
+  color: var(--foreground);
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+.writing-content h1 {
+  font-size: 1.6rem;
+}
+.writing-content h2 {
+  font-size: 1.4rem;
+}
+.writing-content h3 {
+  font-size: 1.15rem;
+}
+.writing-content h4 {
+  font-size: 1rem;
+}
+.writing-content > *:first-child {
+  margin-top: 0;
+}
+.writing-content > *:last-child {
+  margin-bottom: 0;
+}
+.writing-content p {
+  margin: 1em 0;
+}
+.writing-content a {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+.writing-content blockquote {
+  border-left: 3px solid var(--primary);
+  padding-left: 1rem;
+  color: var(--muted);
+  margin: 1em 0;
+  font-style: italic;
+}
+.writing-content code,
+.writing-content pre {
+  background-color: var(--surface-muted);
+  color: var(--foreground);
+  border-radius: 0.375rem;
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+.writing-content code {
+  padding: 0.1em 0.35em;
+}
+.writing-content pre {
+  padding: 0.85rem 1rem;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+}
+.writing-content ul,
+.writing-content ol {
+  padding-left: 1.35rem;
+  margin: 0.85em 0;
+}
+.writing-content ul {
+  list-style: disc;
+}
+.writing-content ol {
+  list-style: decimal;
+}
+.writing-content li {
+  margin: 0.3em 0;
+}
+.writing-content li::marker {
+  color: var(--faint);
+}
+.writing-content hr {
+  border-color: var(--border);
+  margin: 1.75em 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Colored surfaces & text (bg-*-50, text-*-700/800/600) get            */
+/* dark-mode overrides so status colors remain readable.               */
+/* These rules are unlayered so they win over the raw Tailwind         */
+/* utilities they mirror.                                              */
+/* ------------------------------------------------------------------ */
+.dark .bg-indigo-50,
+.dark .hover\:bg-indigo-50:hover {
+  background-color: rgb(99 102 241 / 0.16);
+}
+.dark .bg-indigo-50\/70 {
+  background-color: rgb(99 102 241 / 0.2);
+}
+.dark .bg-indigo-100 {
+  background-color: rgb(99 102 241 / 0.24);
+}
+.dark .bg-emerald-50,
+.dark .hover\:bg-emerald-50:hover {
+  background-color: rgb(16 185 129 / 0.16);
+}
+.dark .bg-sky-50,
+.dark .hover\:bg-sky-50:hover {
+  background-color: rgb(14 165 233 / 0.16);
+}
+.dark .bg-amber-50,
+.dark .hover\:bg-amber-50:hover {
+  background-color: rgb(245 158 11 / 0.16);
+}
+.dark .bg-red-50,
+.dark .hover\:bg-red-50:hover {
+  background-color: rgb(239 68 68 / 0.16);
+}
+.dark .bg-violet-50 {
+  background-color: rgb(139 92 246 / 0.16);
+}
+.dark .bg-cyan-50 {
+  background-color: rgb(6 182 212 / 0.16);
+}
+.dark .bg-rose-50 {
+  background-color: rgb(244 63 94 / 0.16);
+}
+.dark .bg-pink-50 {
+  background-color: rgb(236 72 153 / 0.16);
+}
+.dark .bg-teal-50 {
+  background-color: rgb(20 184 166 / 0.16);
+}
+.dark .bg-orange-50 {
+  background-color: rgb(249 115 22 / 0.16);
+}
+.dark .bg-lime-50 {
+  background-color: rgb(132 204 22 / 0.16);
+}
+.dark .bg-fuchsia-50 {
+  background-color: rgb(217 70 239 / 0.16);
+}
+.dark .border-red-200 {
+  border-color: rgb(239 68 68 / 0.35);
+}
+.dark .border-amber-200 {
+  border-color: rgb(245 158 11 / 0.35);
+}
+.dark .border-emerald-200 {
+  border-color: rgb(16 185 129 / 0.35);
+}
+.dark .ring-indigo-200 {
+  --tw-ring-color: rgb(99 102 241 / 0.45);
+}
+.dark .text-indigo-700 {
+  color: #a5b4fc;
+}
+.dark .text-indigo-800 {
+  color: #c7d2fe;
+}
+.dark .text-emerald-700,
+.dark .text-emerald-600 {
+  color: #6ee7b7;
+}
+.dark .text-sky-700 {
+  color: #7dd3fc;
+}
+.dark .text-amber-800,
+.dark .text-amber-700,
+.dark .text-amber-600 {
+  color: #fcd34d;
+}
+.dark .text-red-700,
+.dark .text-red-600 {
+  color: #fca5a5;
+}
+.dark .text-violet-700 {
+  color: #c4b5fd;
+}
+.dark .text-cyan-700 {
+  color: #67e8f9;
+}
+.dark .text-rose-700 {
+  color: #fda4af;
+}
+.dark .text-pink-700 {
+  color: #f9a8d4;
+}
+.dark .text-teal-700 {
+  color: #5eead4;
+}
+.dark .text-orange-700 {
+  color: #fdba74;
+}
+.dark .text-lime-700 {
+  color: #bef264;
+}
+.dark .text-fuchsia-700 {
+  color: #f0abfc;
+}
