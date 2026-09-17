@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "./lib/theme/ThemeProvider";
 import { AuthProvider } from "./lib/auth/AuthProvider";
 import { RequireAuth, PublicOnly } from "./lib/auth/RequireAuth";
@@ -23,9 +23,16 @@ import { SignupPage } from "./pages/auth/SignupPage";
 import { ForgotPasswordPage } from "./pages/auth/ForgotPasswordPage";
 import { ResetPasswordPage } from "./pages/auth/ResetPasswordPage";
 
+function redirectFromStorage(): string | null {
+  const target = sessionStorage.getItem("research-hub:redirect");
+  sessionStorage.removeItem("research-hub:redirect");
+  return target;
+}
+
 export default function App() {
+  const redirect = redirectFromStorage();
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <ThemeProvider>
         <AuthProvider>
           <ErrorBoundary>
@@ -36,7 +43,7 @@ export default function App() {
               <Route path="/reset-password" element={<PublicOnly><ResetPasswordPage /></PublicOnly>} />
               <Route element={<RequireAuth />}>
                 <Route element={<Layout />}>
-                  <Route index element={<Dashboard />} />
+                  <Route index element={redirect ? <InitRedirect to={redirect} /> : <Dashboard />} />
                   <Route path="projects" element={<Projects />} />
                   <Route path="projects/:projectId" element={<ProjectDetail />} />
                   <Route path="projects/:projectId/:entity/:entityId" element={<EntityDetailPage />} />
@@ -70,4 +77,8 @@ function NotFound() {
       </div>
     </div>
   );
+}
+
+function InitRedirect({ to }: { to: string }) {
+  return <Navigate to={to} replace />;
 }

@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Research Hub</title>
+    <script>
+      (function () {
+        var base = "/research-hub/";
+        var path = location.pathname;
+        sessionStorage.setItem("research-hub:redirect", path + location.search + location.hash);
+        location.replace(base);
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>
