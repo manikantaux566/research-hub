@@ -80,5 +80,10 @@ function NotFound() {
 }
 
 function InitRedirect({ to }: { to: string }) {
-  return <Navigate to={to} replace />;
+  // 404.html stores the full request path including the base prefix (e.g.
+  // "/research-hub/projects"). The router already applies `basename`, so strip
+  // the prefix to get the app-internal path and avoid a doubled base.
+  const base = import.meta.env.BASE_URL; // "/research-hub/" in production, "/" in dev
+  const target = base && to.startsWith(base) ? to.slice(base.length - 1) : to;
+  return <Navigate to={target} replace />;
 }
